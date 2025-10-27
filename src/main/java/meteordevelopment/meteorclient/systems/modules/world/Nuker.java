@@ -8,7 +8,7 @@ package meteordevelopment.meteorclient.systems.modules.world;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import meteordevelopment.meteorclient.events.entity.player.BlockBreakingCooldownEvent;
 import meteordevelopment.meteorclient.events.meteor.KeyEvent;
-import meteordevelopment.meteorclient.events.meteor.MouseClickEvent;
+import meteordevelopment.meteorclient.events.meteor.MouseButtonEvent;
 import meteordevelopment.meteorclient.events.render.Render3DEvent;
 import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.renderer.ShapeMode;
@@ -58,10 +58,10 @@ public class Nuker extends Module {
         .build()
     );
 
-    private final Setting<Mode> mode = sgGeneral.add(new EnumSetting.Builder<Mode>()
+    private final Setting<Nuker.Mode> mode = sgGeneral.add(new EnumSetting.Builder<Nuker.Mode>()
         .name("mode")
         .description("The way the blocks are broken.")
-        .defaultValue(Mode.Flatten)
+        .defaultValue(Nuker.Mode.Flatten)
         .build()
     );
 
@@ -152,10 +152,10 @@ public class Nuker extends Module {
         .build()
     );
 
-    private final Setting<SortMode> sortMode = sgGeneral.add(new EnumSetting.Builder<SortMode>()
+    private final Setting<Nuker.SortMode> sortMode = sgGeneral.add(new EnumSetting.Builder<Nuker.SortMode>()
         .name("sort-mode")
         .description("The blocks you want to mine first.")
-        .defaultValue(SortMode.Closest)
+        .defaultValue(Nuker.SortMode.Closest)
         .build()
     );
 
@@ -328,7 +328,7 @@ public class Nuker extends Module {
     }
 
     @EventHandler
-    private void onMouseClick(MouseClickEvent event) {
+    private void onMouseButton(MouseButtonEvent event) {
         if (event.action == KeyAction.Press) addTargetedBlockToList();
     }
 

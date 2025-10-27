@@ -12,6 +12,8 @@ import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.client.render.MapRenderState;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.component.type.MapIdComponent;
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.map.MapState;
@@ -47,7 +49,7 @@ public class MapTooltipComponent implements TooltipComponent, MeteorTooltipData 
 
     @Override
     public void drawItems(TextRenderer textRenderer, int x, int y, int width, int height, DrawContext context) {
-        var scale = Modules.get().get(BetterTooltips.class).mapsScale.get().floatValue();
+        double scale = Modules.get().get(BetterTooltips.class).mapsScale.get();
 
         // Background
         int size = (int) ((128 + 16) * scale);
@@ -57,14 +59,16 @@ public class MapTooltipComponent implements TooltipComponent, MeteorTooltipData 
         MapState mapState = FilledMapItem.getMapState(new MapIdComponent(mapId), mc.world);
         if (mapState == null) return;
 
-        context.getMatrices().pushMatrix();
-        context.getMatrices().translate(x, y);
-        context.getMatrices().scale(scale, scale);
-        context.getMatrices().translate(8, 8);
+        MatrixStack matrices2 = new MatrixStack();
+        VertexConsumerProvider.Immediate consumer = mc.getBufferBuilders().getEntityVertexConsumers();
 
+        matrices2.push();
+        matrices2.translate(x, y, 0);
+        matrices2.scale((float) scale, (float) scale, 0);
+        matrices2.translate(8, 8, 0);
         mc.getMapRenderer().update(new MapIdComponent(mapId), mapState, mapRenderState);
-        context.drawMap(mapRenderState);
-
-        context.getMatrices().popMatrix();
+        mc.getMapRenderer().draw(mapRenderState, matrices2, consumer, false, 0xF000F0);
+        consumer.draw();
+        matrices2.pop();
     }
 }

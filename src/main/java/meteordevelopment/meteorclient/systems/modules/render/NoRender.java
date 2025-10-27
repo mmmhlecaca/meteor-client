@@ -244,6 +244,13 @@ public class NoRender extends Module {
         .build()
     );
 
+    private final Setting<Boolean> noSkylightUpdates = sgWorld.add(new BoolSetting.Builder()
+        .name("skylight-updates")
+        .description("Disables rendering of skylight updates.")
+        .defaultValue(false)
+        .build()
+    );
+
     private final Setting<Boolean> noBeaconBeams = sgWorld.add(new BoolSetting.Builder()
         .name("beacon-beams")
         .description("Disables rendering of beacon beams.")
@@ -518,6 +525,10 @@ public class NoRender extends Module {
         return isActive() && noBlockBreakOverlay.get();
     }
 
+    public boolean noSkylightUpdates() {
+        return isActive() && noSkylightUpdates.get();
+    }
+
     public boolean noBeaconBeams() {
         return isActive() && noBeaconBeams.get();
     }
@@ -565,7 +576,7 @@ public class NoRender extends Module {
 
     @EventHandler
     private void onRenderBlockEntity(RenderBlockEntityEvent event) {
-        if (blockEntities.get().contains(event.blockEntityState.blockState.getBlock())) event.cancel();
+        if (blockEntities.get().contains(event.blockEntity.getCachedState().getBlock())) event.cancel();
     }
 
     // Entity

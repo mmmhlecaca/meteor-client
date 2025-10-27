@@ -12,6 +12,7 @@ import baritone.api.pathing.goals.GoalXZ;
 import baritone.api.process.IBaritoneProcess;
 import baritone.api.process.PathingCommand;
 import baritone.api.process.PathingCommandType;
+import baritone.api.utils.Rotation;
 import baritone.api.utils.SettingsUtil;
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.events.world.TickEvent;
@@ -157,7 +158,7 @@ public class BaritonePathManager implements IPathManager {
             if (timer <= 0) {
                 timer = 20;
 
-                Vec3d pos = mc.player.getEntityPos();
+                Vec3d pos = mc.player.getPos();
                 float theta = (float) Math.toRadians(yaw);
 
                 x = (int) Math.floor(pos.x - (double) MathHelper.sin(theta) * 100);

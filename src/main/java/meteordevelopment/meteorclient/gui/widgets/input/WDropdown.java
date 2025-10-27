@@ -10,9 +10,6 @@ import meteordevelopment.meteorclient.gui.utils.Cell;
 import meteordevelopment.meteorclient.gui.widgets.WRoot;
 import meteordevelopment.meteorclient.gui.widgets.containers.WVerticalList;
 import meteordevelopment.meteorclient.gui.widgets.pressable.WPressable;
-import net.minecraft.client.gui.Click;
-import net.minecraft.client.input.CharInput;
-import net.minecraft.client.input.KeyInput;
 import net.minecraft.util.math.MathHelper;
 
 public abstract class WDropdown<T> extends WPressable {
@@ -124,20 +121,20 @@ public abstract class WDropdown<T> extends WPressable {
     // Events
 
     @Override
-    public boolean onMouseClicked(Click click, boolean used) {
+    public boolean onMouseClicked(double mouseX, double mouseY, int button, boolean used) {
         if (!mouseOver && !root.mouseOver) expanded = false;
 
-        if (super.onMouseClicked(click, used)) used = true;
-        if (expanded && root.mouseClicked(click, used)) used = true;
+        if (super.onMouseClicked(mouseX, mouseY, button, used)) used = true;
+        if (expanded && root.mouseClicked(mouseX, mouseY, button, used)) used = true;
 
         return used;
     }
 
     @Override
-    public boolean onMouseReleased(Click click) {
-        if (super.onMouseReleased(click)) return true;
+    public boolean onMouseReleased(double mouseX, double mouseY, int button) {
+        if (super.onMouseReleased(mouseX, mouseY, button)) return true;
 
-        return expanded && root.mouseReleased(click);
+        return expanded && root.mouseReleased(mouseX, mouseY, button);
     }
 
     @Override
@@ -159,24 +156,24 @@ public abstract class WDropdown<T> extends WPressable {
     }
 
     @Override
-    public boolean onKeyPressed(KeyInput input) {
-        if (super.onKeyPressed(input)) return true;
+    public boolean onKeyPressed(int key, int mods) {
+        if (super.onKeyPressed(key, mods)) return true;
 
-        return expanded && root.keyPressed(input);
+        return expanded && root.keyPressed(key, mods);
     }
 
     @Override
-    public boolean onKeyRepeated(KeyInput input) {
-        if (super.onKeyRepeated(input)) return true;
+    public boolean onKeyRepeated(int key, int mods) {
+        if (super.onKeyRepeated(key, mods)) return true;
 
-        return expanded && root.keyRepeated(input);
+        return expanded && root.keyRepeated(key, mods);
     }
 
     @Override
-    public boolean onCharTyped(CharInput input) {
-        if (super.onCharTyped(input)) return true;
+    public boolean onCharTyped(char c) {
+        if (super.onCharTyped(c)) return true;
 
-        return expanded && root.charTyped(input);
+        return expanded && root.charTyped(c);
     }
 
     // Widgets

@@ -73,10 +73,15 @@ public abstract class MultiplayerScreenMixin extends Screen {
         proxies.setPosition(this.width - 75 - 3 - 75 - 2, 3);
     }
 
+<<<<<<< HEAD
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
         super.render(context, mouseX, mouseY, deltaTicks);
 
+=======
+    @Inject(method = "render", at = @At("TAIL"))
+    private void onRender(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+>>>>>>> parent of ce2457446 (1.21.10/.9 update (#5763))
         int x = 3;
         int y = 3;
 

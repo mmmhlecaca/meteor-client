@@ -12,17 +12,13 @@ import meteordevelopment.meteorclient.systems.modules.Modules;
 import meteordevelopment.meteorclient.systems.modules.render.Chams;
 import meteordevelopment.meteorclient.utils.player.Rotations;
 import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.network.ClientPlayerLikeEntity;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.command.OrderedRenderCommandQueue;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.LivingEntityRenderer;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
-import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.render.entity.state.PlayerEntityRenderState;
-import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.PlayerLikeEntity;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -33,16 +29,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import static meteordevelopment.meteorclient.MeteorClient.mc;
 
 @Mixin(PlayerEntityRenderer.class)
-public abstract class PlayerEntityRendererMixin<AvatarlikeEntity extends PlayerLikeEntity & ClientPlayerLikeEntity>
-    extends LivingEntityRenderer<AvatarlikeEntity, PlayerEntityRenderState, PlayerEntityModel> {
+public abstract class PlayerEntityRendererMixin {
     // Chams
 
     @Unique
     private Chams chams;
-
-    public PlayerEntityRendererMixin(EntityRendererFactory.Context ctx, PlayerEntityModel model, float shadowRadius) {
-        super(ctx, model, shadowRadius);
-    }
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void init$chams(CallbackInfo info) {
@@ -51,8 +42,8 @@ public abstract class PlayerEntityRendererMixin<AvatarlikeEntity extends PlayerL
 
     // Chams - Player scale
 
-    @Inject(method = "updateRenderState(Lnet/minecraft/entity/PlayerLikeEntity;Lnet/minecraft/client/render/entity/state/PlayerEntityRenderState;F)V", at = @At("RETURN"))
-    private void updateRenderState$scale(AvatarlikeEntity player, PlayerEntityRenderState state, float f, CallbackInfo ci) {
+    @Inject(method = "updateRenderState(Lnet/minecraft/client/network/AbstractClientPlayerEntity;Lnet/minecraft/client/render/entity/state/PlayerEntityRenderState;F)V", at = @At("RETURN"))
+    private void updateRenderState$scale(AbstractClientPlayerEntity player, PlayerEntityRenderState state, float f, CallbackInfo info) {
         if (!chams.isActive() || !chams.players.get()) return;
         if (chams.ignoreSelf.get() && player == mc.player) return;
 
@@ -66,7 +57,7 @@ public abstract class PlayerEntityRendererMixin<AvatarlikeEntity extends PlayerL
     // Chams - Hand Texture
 
     @ModifyExpressionValue(method = "renderArm", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/RenderLayer;getEntityTranslucent(Lnet/minecraft/util/Identifier;)Lnet/minecraft/client/render/RenderLayer;"))
-    private RenderLayer renderArm$texture(RenderLayer original, MatrixStack matrixStack, OrderedRenderCommandQueue entityRenderCommandQueue, int light, Identifier skinTexture, ModelPart modelPart, boolean sleeveVisible) {
+    private RenderLayer renderArm$texture(RenderLayer original, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, Identifier skinTexture, ModelPart arm, boolean sleeveVisible) {
         if (chams.isActive() && chams.hand.get()) {
             Identifier texture = chams.handTexture.get() ? skinTexture : Chams.BLANK;
             return RenderLayer.getEntityTranslucent(texture);
@@ -77,10 +68,10 @@ public abstract class PlayerEntityRendererMixin<AvatarlikeEntity extends PlayerL
 
     // Chams - Hand Color
 
-    @WrapWithCondition(method = "renderArm", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/command/OrderedRenderCommandQueue;submitModelPart(Lnet/minecraft/client/model/ModelPart;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/RenderLayer;IILnet/minecraft/client/texture/Sprite;)V"))
-    private boolean renderArm$color(OrderedRenderCommandQueue instance, ModelPart modelPart, MatrixStack matrixStack, RenderLayer renderLayer, int light, int uv, Sprite sprite) {
+    @WrapWithCondition(method = "renderArm", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/ModelPart;render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;II)V"))
+    private boolean renderArm$color(ModelPart instance, MatrixStack matrices, VertexConsumer vertices, int light, int overlay) {
         if (chams.isActive() && chams.hand.get()) {
-            instance.submitModelPart(modelPart, matrixStack, renderLayer, light, uv, null, chams.handColor.get().getPacked(), null);
+            instance.render(matrices, vertices, light, overlay, chams.handColor.get().getPacked());
             return false;
         }
 
@@ -89,10 +80,9 @@ public abstract class PlayerEntityRendererMixin<AvatarlikeEntity extends PlayerL
 
     // Rotations
 
-    @Inject(method = "updateRenderState(Lnet/minecraft/entity/PlayerLikeEntity;Lnet/minecraft/client/render/entity/state/PlayerEntityRenderState;F)V", at = @At("RETURN"))
-    private void updateRenderState$rotations(AvatarlikeEntity player, PlayerEntityRenderState state, float f, CallbackInfo info) {
+    @Inject(method = "updateRenderState(Lnet/minecraft/client/network/AbstractClientPlayerEntity;Lnet/minecraft/client/render/entity/state/PlayerEntityRenderState;F)V", at = @At("RETURN"))
+    private void updateRenderState$rotations(AbstractClientPlayerEntity player, PlayerEntityRenderState state, float f, CallbackInfo info) {
         if (Rotations.rotating && player == mc.player) {
-            state.relativeHeadYaw = 0;
             state.bodyYaw = Rotations.serverYaw;
             state.pitch = Rotations.serverPitch;
         }

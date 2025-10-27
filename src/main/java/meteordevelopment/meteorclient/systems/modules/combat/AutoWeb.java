@@ -161,7 +161,7 @@ public class AutoWeb extends Module {
         FindItemResult webs = InvUtils.findInHotbar(Items.COBWEB);
         if (!webs.found()) return;
 
-        Vec3d pos = target.getEntityPos();
+        Vec3d pos = target.getPos();
 
         // Prediction mode via target's movement delta
         if (predictMovement.get()) {

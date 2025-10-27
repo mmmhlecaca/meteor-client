@@ -6,7 +6,6 @@
 package meteordevelopment.meteorclient.gui.widgets.pressable;
 
 import meteordevelopment.meteorclient.gui.renderer.packer.GuiTexture;
-import net.minecraft.client.gui.Click;
 
 public abstract class WConfirmedButton extends WButton {
 
@@ -19,8 +18,8 @@ public abstract class WConfirmedButton extends WButton {
     }
 
     @Override
-    public boolean onMouseClicked(Click click, boolean used) {
-        boolean pressed = super.onMouseClicked(click, used);
+    public boolean onMouseClicked(double mouseX, double mouseY, int button, boolean used) {
+        boolean pressed = super.onMouseClicked(mouseX, mouseY, button, used);
         if (!pressed) {
             pressedOnce = false;
             invalidate();
@@ -29,8 +28,8 @@ public abstract class WConfirmedButton extends WButton {
     }
 
     @Override
-    public boolean onMouseReleased(Click click) {
-        if (pressed && pressedOnce) super.onMouseReleased(click);
+    public boolean onMouseReleased(double mouseX, double mouseY, int button) {
+        if (pressed && pressedOnce) super.onMouseReleased(mouseX, mouseY, button);
         pressedOnce = pressed;
         invalidate();
         return pressed = false;

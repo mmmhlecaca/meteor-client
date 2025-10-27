@@ -385,7 +385,7 @@ public class HoleFiller extends Module {
     }
 
     private boolean isCloseToHolePos(PlayerEntity target, BlockPos blockPos) {
-        Vec3d pos = target.getEntityPos();
+        Vec3d pos = target.getPos();
 
         // Prediction mode via target's movement delta
         if (predictMovement.get()) {

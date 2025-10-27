@@ -169,7 +169,7 @@ public class WaypointsModule extends Module {
     private void onOpenScreen(OpenScreenEvent event) {
         if (!(event.screen instanceof DeathScreen)) return;
 
-        if (!event.isCancelled()) addDeath(mc.player.getEntityPos());
+        if (!event.isCancelled()) addDeath(mc.player.getPos());
     }
 
     public void addDeath(Vec3d deathPos) {

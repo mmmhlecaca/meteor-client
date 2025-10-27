@@ -230,7 +230,7 @@ public class HoleESP extends Module {
 
     @EventHandler
     private void onRender(Render3DEvent event) {
-        for (Hole hole : holes) hole.render(event.renderer, shapeMode.get(), height.get(), topQuad.get(), bottomQuad.get());
+        for (HoleESP.Hole hole : holes) hole.render(event.renderer, shapeMode.get(), height.get(), topQuad.get(), bottomQuad.get());
     }
 
     private static class Hole {
