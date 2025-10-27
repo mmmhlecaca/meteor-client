@@ -311,82 +311,8 @@ public class Freecam extends Module {
 
         boolean cancel = true;
 
-<<<<<<< HEAD
-    @Nullable
-    private BlockPos rayCastEntity(Vec3d posVec, Vec3d max, short maxDist) {
-        EntityHitResult res = ProjectileUtil.raycast(
-            mc.player,
-            posVec,
-            max,
-            Box.enclosing(BlockPos.ofFloored(posVec.x, posVec.y, posVec.z), BlockPos.ofFloored(max.x, max.y, max.z)),
-            (entity) -> true,
-            maxDist
-        );
-
-        if (res == null) return null;
-
-        Vec3d vec = res.getPos();
-
-        return BlockPos.ofFloored(vec.x, vec.y, vec.z);
-    }
-
-    @Nullable
-    private BlockPos rayCastBlock(Vec3d posVec, Vec3d max) {
-        RaycastContext ctx = new RaycastContext(
-            posVec,
-            max,
-            RaycastContext.ShapeType.VISUAL,
-            RaycastContext.FluidHandling.SOURCE_ONLY,
-            ShapeContext.absent()
-        );
-
-        BlockHitResult res = mc.world.raycast(ctx);
-        if (res.getType() == HitResult.Type.MISS) return null;
-
-        // Don't move inside block
-        return res.getBlockPos().add(res.getSide().getVector());
-    }
-
-    private void setGoal() {
-        long prevClick = clickTs;
-        clickTs = System.currentTimeMillis();
-
-        if (requireDoubleClick.get() && clickTs - prevClick > 500) return;
-
-        Camera cam = mc.gameRenderer.getCamera();
-        Vec3d posVec = cam.getPos();
-        Vec3d lookVec = Vec3d.fromPolar(cam.getPitch(), cam.getYaw());
-        short maxDist = 256;
-        Vec3d max = posVec.add(lookVec.multiply(maxDist));
-
-        BlockPos pos = rayCastEntity(posVec, max, maxDist);
-        if (pos == null) {
-            pos = rayCastBlock(posVec, max);
-        }
-
-        if (pos == null) return;
-
-        PathManagers.get().moveTo(pos);
-    }
-
-    @EventHandler(priority = EventPriority.HIGH)
-    private void onMouseClick(MouseClickEvent event) {
-        if (checkGuiMove()) return;
-
-        if (baritoneClick.get() && event.action == KeyAction.Press && mc.options.attackKey.matchesMouse(event.click)) {
-            setGoal();
-        }
-
-        if (onInput(event.button(), event.action)) event.cancel();
-    }
-
-    private boolean onInput(int key, KeyAction action) {
-        if (Input.getKey(mc.options.forwardKey) == key) {
-            forward = action != KeyAction.Release;
-=======
         if (mc.options.forwardKey.matchesKey(event.key, 0)) {
             forward = event.action != KeyAction.Release;
->>>>>>> parent of ce2457446 (1.21.10/.9 update (#5763))
             mc.options.forwardKey.setPressed(false);
         }
         else if (mc.options.backKey.matchesKey(event.key, 0)) {
