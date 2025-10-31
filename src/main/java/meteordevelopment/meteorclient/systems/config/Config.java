@@ -71,6 +71,13 @@ public class Config extends System<Config> {
         .build()
     );
 
+    public final Setting<Boolean> multiplayerScreenElements = sgVisual.add(new BoolSetting.Builder()
+        .name("multiplayer-screen-elements")
+        .description("Show account and proxy elements on multiplayer screen")
+        .defaultValue(true)
+        .build()
+    );
+
     public final Setting<Boolean> customWindowTitle = sgVisual.add(new BoolSetting.Builder()
         .name("custom-window-title")
         .description("Show custom text in the window title.")
