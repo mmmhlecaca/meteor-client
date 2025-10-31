@@ -9,8 +9,8 @@ import meteordevelopment.meteorclient.mixin.EntityRenderDispatcherMixin;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.state.EntityRenderState;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
+import org.jetbrains.annotations.Nullable;
 
 public interface IEntityRenderState {
     /**
@@ -25,6 +25,7 @@ public interface IEntityRenderState {
      *
      * @see EntityRenderDispatcherMixin#render$getAndUpdateRenderState(EntityRenderState, Entity, double, double, double, float, MatrixStack, VertexConsumerProvider, int, EntityRenderer)
      */
+    @Nullable(value = "EntityCulling mod can prevent the code that sets the entity from running")
     Entity meteor$getEntity();
 
     void meteor$setEntity(Entity entity);
