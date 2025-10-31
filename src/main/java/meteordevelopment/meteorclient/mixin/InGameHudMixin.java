@@ -9,6 +9,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.events.render.Render2DEvent;
 import meteordevelopment.meteorclient.systems.modules.Modules;
+import meteordevelopment.meteorclient.systems.modules.render.HideRenderModules;
 import meteordevelopment.meteorclient.systems.modules.misc.BetterChat;
 import meteordevelopment.meteorclient.systems.modules.render.Freecam;
 import meteordevelopment.meteorclient.systems.modules.render.NoRender;
@@ -33,6 +34,7 @@ public abstract class InGameHudMixin {
 
     @Inject(method = "render", at = @At("TAIL"))
     private void onRender(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
+        if (HideRenderModules.INSTANCE.isActive()) return;
         context.createNewRootLayer();
 
         Profilers.get().push(MeteorClient.MOD_ID + "_render_2d");

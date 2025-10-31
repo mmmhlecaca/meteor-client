@@ -12,6 +12,7 @@ import meteordevelopment.meteorclient.gui.WidgetScreen;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.systems.System;
 import meteordevelopment.meteorclient.systems.Systems;
+import meteordevelopment.meteorclient.systems.modules.render.HideRenderModules;
 import meteordevelopment.meteorclient.systems.hud.elements.*;
 import meteordevelopment.meteorclient.systems.hud.screens.HudEditorScreen;
 import meteordevelopment.meteorclient.utils.Utils;
@@ -229,6 +230,7 @@ public class Hud extends System<Hud> implements Iterable<HudElement> {
 
         if (!active || shouldHideHud()) return;
         if ((mc.options.hudHidden || mc.inGameHud.getDebugHud().shouldShowDebugHud()) && !HudEditorScreen.isOpen()) return;
+        if (HideRenderModules.INSTANCE.isActive()) return;
 
         HudRenderer.INSTANCE.begin(event.drawContext);
 
