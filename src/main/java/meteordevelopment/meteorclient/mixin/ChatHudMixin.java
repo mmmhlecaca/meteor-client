@@ -142,8 +142,8 @@ public abstract class ChatHudMixin implements IChatHud {
     // Anti spam
 
     @Inject(method = "addVisibleMessage", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/ChatHud;isChatFocused()Z"))
-    private void onBreakChatMessageLines(ChatHudLine message, CallbackInfo ci, Share("listRef") LocalRef<OrderedText>> listRef) {
-        if (Modules.get() == null) return; // baritone calls addMessage before we initialise
+    private void onBreakChatMessageLines(ChatHudLine message, CallbackInfo ci, LocalRef<List<OrderedText>> listRef) {
+    if (Modules.get() == null) return; // baritone calls addMessage before we initialise
 
         List<OrderedText> list = listRef.get();
         getBetterChat().lines.addFirst(list.size());
